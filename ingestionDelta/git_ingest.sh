@@ -252,8 +252,12 @@ then
 		echo 'Sorry, it looks like the append step failed. Please contact Adam McMurchie or fix the config files, then push to branch and create pull request. Delete the in_use.txt and remove conents of delta once done.'
 	fi
 
-	rm -rf delta
-	mkdir delta
+	rm delta/$FILEA
+	rm delta/$FILEB
+	rm delta/$FILEC 
+	rm delta/$FILED
+	rm delta/$FILEE 
+
 	rm $LOCKFILE
 
 
