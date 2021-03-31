@@ -108,7 +108,7 @@ then
 	echo '***Ingestion Checkout****'
 	echo ' '
 	# GET BRANCH NAME
-	read -p "Please provide the branch name, i.e. release/new_branch: " branch_name
+	read -p "Please provide the dev branch name to work on, i.e. feature/new_branch: " branch_name
 	echo ' '
 	# CHANGE DIRECTORY BACK TO BASE
 	cd ..
