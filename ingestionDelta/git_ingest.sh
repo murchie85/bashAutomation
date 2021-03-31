@@ -1,5 +1,54 @@
 #!/bin/bash
 
+# AUTHOR: Adam McMurchie
+# This job is triggered when a developer wants to do ingestion work
+# Background
+# -----------
+# Because of environment limitations set upon us, we can not build of branches
+# Nor can we develop locally or in notebook, we can only develop on cluster
+# This means, due to file cross contamination - a process has been devised to allow 
+# one developer to change  and test ingestion at a time by stashing changes.
+# Usage
+# ------
+# Use Developer runs this job once they wish to begin work
+# The developer makes changes locally and merges to master as normal
+# Tests the jobs as normal
+# Once happy, runs this a second time chosing option 2 
+# Changes are then consolidated and updated on both branch and master
+# Summary
+# --------
+# Choice: Promts user to pick which step they are performing
+
+# Option 1: Starting ingestion work
+# Gets branch name from user
+# pulls updates
+# Checks out branch or exit if not exists
+# rebases
+# CDs to working dir
+# checks if in_use lockfile, exits if in use
+# Creates lockfile
+# Backs up all config files to delta folder
+# Clears out config files and creates empty ones
+# Adds changes
+# updates branch
+# merges branch to master
+# switches back to branch
+
+# Option 2: 
+# Gets branch name from user
+# pulls updates
+# Adds, commits and pushes changes
+# Appends developers changes to delta stash
+# Clears out config
+# Copies full configs back from Delta
+# Gives the developer a chance to make changes if required
+# Removes lockfile
+# pushes to branch
+# merges into master
+# switches back to branch
+
+
+
 target_working_dir='ingestionDelta'
 LOCKFILE=in_use.txt
 
@@ -198,10 +247,6 @@ then
 	echo 'Done!'
 
 
-	echo 'Rebasing changes'
-	git rebase
-	echo 'Done'
-	echo ''
 	cd $target_working_dir
 
 
@@ -210,8 +255,16 @@ then
 	echo ''
 	echo 'Stashing and Appending Developer changes'
 	
-	echo "" >> delta/$FILEA
-	cat ../$FILE_PATH_A$FILEA >> delta/$FILEA
+	sed -i 1d delta/$FILEA
+
+	if [ -s ../$FILE_PATH_A$FILEA  ]
+	then
+		echo "" >> delta/$FILEA
+		cat ../$FILE_PATH_A$FILEA >> delta/$FILEA
+	else 
+		echo 'File empty not copying'
+	fi
+
 
 	if [ -s ../$FILE_PATH_B$FILEB  ]
 	then
@@ -274,12 +327,8 @@ then
 
 
 
-	echo 'Please have a look at the configuration files  - does this look good?'
-	read -p "y/n : " validate  
-	if [ $validate != 'y' ]
-	then
-		echo 'Sorry, it looks like the append step failed. Please contact Adam McMurchie or fix the config files, then push to branch and create pull request. Delete the in_use.txt and remove conents of delta once done.'
-	fi
+	echo 'Please have a look at the configuration files  - does this look good? If not, amend them now before proceeding.'
+	read -p "Enter any key and press enter" dummy  
 
 	#rm delta/$FILEA
 	#rm delta/$FILEB
