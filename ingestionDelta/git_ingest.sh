@@ -213,7 +213,7 @@ then
 	echo "" >> delta/$FILEA
 	cat ../$FILE_PATH_A$FILEA >> delta/$FILEA
 
-	if [ -s delta/$FILEB ]
+	if [ -s ../$FILE_PATH_B$FILEB  ]
 	then
 		echo "" >> delta/$FILEB
 		cat ../$FILE_PATH_B$FILEB >> delta/$FILEB
@@ -221,7 +221,7 @@ then
 		echo 'File empty not copying'
 	fi
 
-	if [ -s delta/$FILEC ]
+	if [ -s ../$FILE_PATH_C$FILEC  ]
 	then
 		echo "" >> delta/$FILEC
 		cat ../$FILE_PATH_C$FILEC >> delta/$FILEC
@@ -229,7 +229,7 @@ then
 		echo 'File empty not copying'
 	fi
 
-	if [ -s delta/$FILED ]
+	if [ -s ../$FILE_PATH_D$FILED  ]
 	then
 		echo "" >> delta/$FILED
 		cat ../$FILE_PATH_D$FILED >> delta/$FILED
@@ -237,7 +237,7 @@ then
 		echo 'File empty not copying'
 	fi
 
-	if [ -s delta/$FILEE ]
+	if [ -s ../$FILE_PATH_E$FILEE  ]
 	then
 		echo "" >> delta/$FILEE
 		cat ../$FILE_PATH_E$FILEE >> delta/$FILEE
