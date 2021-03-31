@@ -212,25 +212,36 @@ then
 	
 	echo "" >> delta/$FILEA
 	cat ../$FILE_PATH_A$FILEA >> delta/$FILEA
-	sed -i '/^$/d' delta/$FILEA
-
-
-
 	echo "" >> delta/$FILEB
 	cat ../$FILE_PATH_B$FILEB >> delta/$FILEB
-	sed -i '/^$/d' delta/$FILEB
-
 	echo "" >> delta/$FILEC
 	cat ../$FILE_PATH_C$FILEC >> delta/$FILEC
-	sed -i '/^$/d' delta/$FILEB
-
 	echo "" >> delta/$FILED
 	cat ../$FILE_PATH_D$FILED >> delta/$FILED
-	sed -i '/^$/d' delta/$FILEB
-
 	echo "" >> delta/$FILEE
 	cat ../$FILE_PATH_E$FILEE >> delta/$FILEE
-	sed -i '/^$/d' delta/$FILEB
+
+
+	echo 'Clearing out config files'
+
+	rm ../$FILE_PATH_A$FILEA 
+	rm ../$FILE_PATH_B$FILEB 
+	rm ../$FILE_PATH_C$FILEC
+	rm ../$FILE_PATH_D$FILED
+	rm ../$FILE_PATH_E$FILEE
+	echo ''
+	echo 'Done'
+
+
+	echo 'Copying delta over to config'
+
+	cp delta/$FILEA ../$FILE_PATH_A$FILEA 
+	cp delta/$FILEB ../$FILE_PATH_B$FILEB 
+	cp delta/$FILEC ../$FILE_PATH_C$FILEC 
+	cp delta/$FILED ../$FILE_PATH_D$FILED
+	cp delta/$FILEE ../$FILE_PATH_E$FILEE 
+	echo ' '
+	echo 'Done'
 
 
 
@@ -241,7 +252,34 @@ then
 		echo 'Sorry, it looks like the append step failed. Please contact Adam McMurchie or fix the config files, then push to branch and create pull request. Delete the in_use.txt and remove conents of delta once done.'
 	fi
 
-	echo "Updating repo"
+	rm -rf delta
+	mkdir delta
+	rm $LOCKFILE
+
+
+	echo 'Adding your changes to branch and updating master'
+	git add . && \
+	git add -u && \
+	git commit -m 'Ingestion Work in Progress! Config Files cleared out'
+	git push 
+	echo 'Done!'
+	echo ''
+
+	echo 'merging to master'
+	git checkout master
+	git pull 
+	git merge $branch_name
+	git push
+
+	echo 'switching back to dev branch'
+	git checkout $branch_name
+
+	#clear
+	echo '**************************************************************************************************************'
+	echo '* Complete - Please check your changes in master'
+	echo '* If there are any issues please contact Adam McMurchie'
+	echo '**************************************************************************************************************'
+
 
 	exit
 fi
