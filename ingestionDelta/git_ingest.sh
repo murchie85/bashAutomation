@@ -115,7 +115,7 @@ then
 	cp ../$FILE_PATH_E$FILEE delta 
 	echo ' '
 	echo 'Done'
-	read -p "Please pick an option: " userChoice 
+	read -p "Please pick an option: " userChoice 	
 
 	echo 'Config files backed up and stored in Delta folder while developer makes changes and tests them'
 	echo ' '
@@ -165,31 +165,72 @@ fi
 
 if [ $userChoice = 2 ]
 then
-	echo 'Beginning ingestion work'
+	echo 'Checking in your changes'
 	echo ' '
 
+	# GET BRANCH NAME
+	read -p "Please provide the branch name, i.e. release/new_branch: " branch_name
+	echo ' '
+	# CHANGE DIRECTORY BACK TO BASE
+	cd ..
+	echo 'Pulling updates'
+	git pull
+	echo 'Done'
+	echo ''
+	echo 'About to checkout branch, currently in location: '
+	pwd
+
+	# IF BRANCH EXISTS CHECK IT OUT 
+
+	{
+		git checkout $branch_name
+	} || { 
+		echo ''
+		echo 'Branch not valid, please check on bitbuket - exiting'
+		exit
+	}
+
+	echo 'Adding your changes'
+	git add . && \
+	git add -u && \
+	git commit -m 'Ingestion Work in Progress! Config Files cleared out'
+	git push 
+	echo 'Done!'
 
 
-
-
-
-
+	echo 'Rebasing changes'
+	git rebase
+	echo 'Done'
+	echo ''
+	cd $target_working_dir
 
 
 
 
 	echo ''
 	echo 'Stashing and Appending Developer changes'
+	
 	echo "" >> delta/$FILEA
 	cat ../$FILE_PATH_A$FILEA >> delta/$FILEA
+	sed -i '/^$/d' delta/$FILEA
+
+
+
 	echo "" >> delta/$FILEB
 	cat ../$FILE_PATH_B$FILEB >> delta/$FILEB
+	sed -i '/^$/d' delta/$FILEB
+
 	echo "" >> delta/$FILEC
 	cat ../$FILE_PATH_C$FILEC >> delta/$FILEC
+	sed -i '/^$/d' delta/$FILEB
+
 	echo "" >> delta/$FILED
 	cat ../$FILE_PATH_D$FILED >> delta/$FILED
+	sed -i '/^$/d' delta/$FILEB
+
 	echo "" >> delta/$FILEE
 	cat ../$FILE_PATH_E$FILEE >> delta/$FILEE
+	sed -i '/^$/d' delta/$FILEB
 
 
 
