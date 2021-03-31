@@ -255,7 +255,7 @@ then
 	echo ''
 	echo 'Stashing and Appending Developer changes'
 	
-	sed -i 1d delta/$FILEA
+	tail -n +2 ../$FILE_PATH_A$FILEA > "$FILE.tmp" && mv "$FILE.tmp" ../$FILE_PATH_A$FILEA 
 
 	if [ -s ../$FILE_PATH_A$FILEA  ]
 	then
