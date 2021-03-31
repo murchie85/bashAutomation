@@ -85,13 +85,6 @@ then
 	echo 'Done'
 	echo ''
 
-	#clear
-	echo '**************************************************************************************************************'
-	echo '* Complete - you can now begin to make changes'
-	echo '* Once done, merge to master and run this again '
-	echo '* selecting option 2' 
-	echo '**************************************************************************************************************'
-
 
 
 	# IF FILE EXISTS, INGESTION IN USE
@@ -114,8 +107,7 @@ then
 	cp ../$FILE_PATH_D$FILED delta
 	cp ../$FILE_PATH_E$FILEE delta 
 	echo ' '
-	echo 'Done'
-	read -p "Please pick an option: " userChoice 	
+	echo 'Done'	
 
 	echo 'Config files backed up and stored in Delta folder while developer makes changes and tests them'
 	echo ' '
@@ -157,6 +149,14 @@ then
 
 	echo 'switching back to dev branch'
 	git checkout $branch_name
+
+	#clear
+	echo '**************************************************************************************************************'
+	echo '* Complete - you can now begin to make changes'
+	echo '* Once done, merge to master and run this again '
+	echo '* selecting option 2' 
+	echo '**************************************************************************************************************'
+
 
 
 	exit
@@ -212,14 +212,43 @@ then
 	
 	echo "" >> delta/$FILEA
 	cat ../$FILE_PATH_A$FILEA >> delta/$FILEA
-	echo "" >> delta/$FILEB
-	cat ../$FILE_PATH_B$FILEB >> delta/$FILEB
-	echo "" >> delta/$FILEC
-	cat ../$FILE_PATH_C$FILEC >> delta/$FILEC
-	echo "" >> delta/$FILED
-	cat ../$FILE_PATH_D$FILED >> delta/$FILED
-	echo "" >> delta/$FILEE
-	cat ../$FILE_PATH_E$FILEE >> delta/$FILEE
+
+	if [ -s delta/$FILEB ]
+	then
+		echo "" >> delta/$FILEB
+		cat ../$FILE_PATH_B$FILEB >> delta/$FILEB
+	else 
+		echo 'File empty not copying'
+	fi
+
+	if [ -s delta/$FILEC ]
+	then
+		echo "" >> delta/$FILEC
+		cat ../$FILE_PATH_C$FILEC >> delta/$FILEC
+	else 
+		echo 'File empty not copying'
+	fi
+
+	if [ -s delta/$FILED ]
+	then
+		echo "" >> delta/$FILED
+		cat ../$FILE_PATH_D$FILED >> delta/$FILED
+	else 
+		echo 'File empty not copying'
+	fi
+
+	if [ -s delta/$FILEE ]
+	then
+		echo "" >> delta/$FILEE
+		cat ../$FILE_PATH_E$FILEE >> delta/$FILEE
+	else 
+		echo 'File empty not copying'
+	fi
+
+
+
+
+
 
 
 	echo 'Clearing out config files'
